@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Profesor - CENEVAL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex">
+    <aside class="w-64 bg-pink-700 text-white flex flex-col justify-between p-6">
+        <div>
+            <div class="flex items-center space-x-3 mb-8">
+                <span class="text-2xl">📚</span>
+                <h1 class="text-xl font-bold">Portal Docente</h1>
+            </div>
+            <nav class="space-y-3">
+                <a href="#" class="block py-2.5 px-4 rounded bg-pink-800 font-medium">Asignar Simulador / Tarea</a>
+                <a href="#" class="block py-2.5 px-4 rounded hover:bg-pink-800 font-medium">Calificaciones y Retroalimentación</a>
+            </nav>
+        </div>
+        <button id="logout-btn" class="bg-indigo-900 hover:bg-indigo-800 py-2 rounded font-bold transition">Cerrar Sesión</button>
+    </aside>
+
+    <main class="flex-1 p-10 overflow-y-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-black text-gray-800">Panel del Profesor</h2>
+            <span id="profesor-email-display" class="bg-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full font-bold text-sm">Profesor</span>
+        </header>
+
+        <section class="grid md:grid-cols-2 gap-6 mb-8">
+            <!-- Crear Simulador Personalizado -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Generar Simulador Tipo Ceneval con IA</h3>
+                <form id="create-simulator-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Materia o Módulo</label>
+                        <select id="sim-materia" class="w-full px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-pink-500">
+                            <optgroup label="EXANI-I">
+                                <option value="Biología EXANI-I">Biología (EXANI-I)</option>
+                                <option value="Física EXANI-I">Física (EXANI-I)</option>
+                                <option value="Química EXANI-I">Química (EXANI-I)</option>
+                                <option value="Pensamiento Matemático EXANI-I">Pensamiento Matemático (EXANI-I)</option>
+                                <option value="Redacción Indirecta EXANI-I">Redacción Indirecta (EXANI-I)</option>
+                                <option value="Comprensión Lectora EXANI-I">Comprensión Lectora (EXANI-I)</option>
+                            </optgroup>
+                            <optgroup label="EXANI-II Tronco Común">
+                                <option value="Pensamiento Matemático EXANI-II">Pensamiento Matemático (EXANI-II)</option>
+                                <option value="Comprensión Lectora EXANI-II">Comprensión Lectora (EXANI-II)</option>
+                                <option value="Inglés B1 EXANI-II">Inglés (B1) (EXANI-II)</option>
+                                <option value="Redacción Indirecta EXANI-II">Redacción Indirecta (EXANI-II)</option>
+                            </optgroup>
+                            <optgroup label="EXANI-II Módulos de Especialidad">
+                                <option value="Premedicina">Premedicina</option>
+                                <option value="Cálculo Diferencial e Integral">Cálculo Diferencial e Integral</option>
+                                <option value="Física Especialidad">Física (Especialidad)</option>
+                                <option value="Biología Especialidad">Biología (Especialidad)</option>
+                                <option value="Química Especialidad">Química (Especialidad)</option>
+                                <option value="Economía">Economía</option>
+                                <option value="Administración">Administración</option>
+                                <option value="Estadística">Estadística</option>
+                                <option value="Probabilidad">Probabilidad</option>
+                                <option value="Matemáticas Financieras">Matemáticas Financieras</option>
+                                <option value="Derecho">Derecho</option>
+                                <option value="Historia Universal">Historia Universal</option>
+                                <option value="Historia de México">Historia de México</option>
+                                <option value="Literatura">Literatura</option>
+                                <option value="Filosofía">Filosofía</option>
+                                <option value="Psicología">Psicología</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Dificultad</label>
+                        <select id="sim-dificultad" class="w-full px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-pink-500">
+                            <option value="Básico">Básico</option>
+                            <option value="Intermedio">Intermedio (Estándar Ceneval)</option>
+                            <option value="Avanzado">Avanzado / Retador</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Número de Preguntas</label>
+                        <input type="number" id="sim-num-preguntas" min="5" max="50" value="10" class="w-full px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-2.5 rounded-lg shadow transition">Crear y Asignar Simulador</button>
+                </form>
+            </div>
+
+            <!-- Simuladores Creados -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Simuladores Asignados a Tus Grupos</h3>
+                    <div id="lista-simuladores-profesor" class="space-y-3 max-h-72 overflow-y-auto pr-2">
+                        <!-- Generado dinámicamente -->
+                        <p class="text-sm text-gray-500 italic">No hay simuladores creados todavía.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
