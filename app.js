@@ -1,3 +1,66 @@
+// Banco completo de reactivos estilo CENEVAL
+const bancoPreguntasCeneval = {
+    "Biología EXANI-I": [
+        {
+            pregunta: "¿Cuál es la unidad estructural y funcional básica de todos los organismos vivos?",
+            opciones: ["A) El tejido", "B) La célula", "C) El ADN", "D) El órgano"],
+            correcta: 1,
+            retro: "La célula es la unidad de origen, estructura y función de todos los seres vivos."
+        },
+        {
+            pregunta: "¿Qué organelo celular se encarga de la respiración celular y la producción de energía (ATP)?",
+            opciones: ["A) Ribosoma", "B) Cloroplasto", "C) Mitocondria", "D) Aparato de Golgi"],
+            correcta: 2,
+            retro: "Las mitocondrias son los centros energéticos de la célula donde se produce el ATP mediante la respiración aerobia."
+        },
+        {
+            pregunta: "¿Cuál es la molécula portadora de la información genética en los organismos eucariotes?",
+            opciones: ["A) ARN mensajero", "B) Proteína", "C) ADN", "D) lípido"],
+            correcta: 2,
+            retro: "El Ácido Desoxirribonucleico (ADN) almacena la información hereditaria en el núcleo celular."
+        }
+    ],
+    "Física EXANI-I": [
+        {
+            pregunta: "De acuerdo con la primera ley de Newton (Ley de la inercia), un cuerpo permanece en reposo o movimiento rectilíneo uniforme a menos que...",
+            opciones: ["A) Su masa sea cero", "B) Se aplique una fuerza externa neta sobre él", "C) Su velocidad disminuya por la gravedad", "D) Su energía cinética aumente"],
+            correcta: 1,
+            retro: "La inercia establece que un objeto no cambia su estado de movimiento por sí mismo; requiere de una fuerza externa neta."
+        },
+        {
+            pregunta: "¿Cuál es la unidad de medida de la fuerza en el Sistema Internacional (SI)?",
+            opciones: ["A) Joule", "B) Watt", "C) Newton", "D) Pascal"],
+            correcta: 2,
+            retro: "El Newton (N) equivale a kg·m/s² y es la unidad fundamental de fuerza."
+        }
+    ],
+    "Química EXANI-I": [
+        {
+            pregunta: "¿Cómo se le llama a las columnas verticales en la tabla periódica de los elementos?",
+            opciones: ["A) Periodos", "B) Grupos o familias", "C) Órbitas", "D) Capas de valencia"],
+            correcta: 1,
+            retro: "Las columnas verticales son los grupos, los cuales agrupan elementos con propiedades químicas similares."
+        }
+    ],
+    "general": [
+        {
+            pregunta: "Pregunta clave de práctica estándar estilo CENEVAL para este módulo de estudio:",
+            opciones: ["A) Opción de análisis lógico A", "B) Opción de resolución teórica B", "C) Opción de aplicación práctica C", "D) Opción de conclusión D"],
+            correcta: 2,
+            retro: "En el examen CENEVAL se evalúa la correcta aplicación del conocimiento analítico a casos prácticos."
+        }
+    ]
+};
+
+// Contenido detallado de los Temarios Desarrollados
+const temariosDesarrollados = {
+    "Pensamiento Matemático": "El módulo de Pensamiento Matemático evalúa la capacidad para resolver problemas mediante la aplicación de razonamiento aritmético, algebraico, geométrico y estadístico. Incluye: operaciones con números reales, expresiones algebraicas, productos notables, ecuaciones lineales y cuadráticas, trigonometría básica, probabilidad y análisis de gráficos estadísticos.",
+    "Redacción Indirecta": "Evalúa las habilidades de comunicación escrita bajo la normatividad del español. Incluye: acentuación, puntuación, concordancia gramatical, cohesión textual, sintaxis, significado de palabras según el contexto, y la estructura lógica de párrafos y ensayos académicos.",
+    "Comprensión Lectora": "Mide la capacidad de interpretar, inferir y evaluar textos de carácter literario, expositivo y argumentativo. Incluye: identificación de ideas principales, propósito del autor, intencionalidad discursiva, relaciones de causa-efecto y extracción de conclusiones válidas.",
+    "Biología EXANI-I": "Estudio integral de los seres vivos. Contenidos clave: estructura y fisiología celular, metabolismo energético (fotosíntesis y respiración), leyes de la herencia de Mendel, genética molecular (ADN y ARN), evolución biológica y biodiversidad en los ecosistemas.",
+    "Física EXANI-I": "Análisis de los fenómenos naturales y mecánicos. Contenidos clave: cinemática (movimiento rectilíneo y uniformemente acelerado), leyes de Newton, trabajo, energía mecánica, leyes de la termodinámica, electromagnetismo elemental y óptica geométrica.",
+    "Química EXANI-I": "Estudio de la materia y sus transformaciones. Contenidos clave: estructura atómica, tabla periódica y propiedades periódicas, enlaces químicos (iónico y covalente), estequiometría, soluciones y balanceo de ecuaciones por óxido-reducción."
+};
 // Configuración de Firebase (Versión Compatible con los SDKs de tus HTML)
 const firebaseConfig = {
     apiKey: "AIzaSyA6uMhHPtXKAqCbtaQgmOAKMXSBNhrkKUg",
