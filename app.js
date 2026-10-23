@@ -78,54 +78,6 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-const bancoPreguntasCeneval = {
-    "Biología EXANI-I": [
-        {
-            pregunta: "¿Cuál es la unidad estructural y funcional básica de todos los organismos vivos?",
-            opciones: ["A) El tejido", "B) La célula", "C) El ADN", "D) El órgano"],
-            correcta: 1,
-            retro: "La célula es la unidad de origen, estructura y función de todos los seres vivos."
-        }
-    ],
-    "Física EXANI-I": [
-        {
-            pregunta: "De acuerdo con la primera ley de Newton, un cuerpo permanece en reposo o movimiento rectilíneo uniforme a menos que...",
-            opciones: ["A) Su masa sea cero", "B) Se aplique una fuerza externa neta sobre él", "C) Su velocidad disminuya por la gravedad", "D) Su energía cinética aumente"],
-            correcta: 1,
-            retro: "La inercia establece que un objeto requiere de una fuerza externa neta para cambiar su estado de movimiento."
-        }
-    ]
-};
-// Login Logic
-const loginForm = document.getElementById('login-form');
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const pass = document.getElementById('login-password').value;
-        const errorEl = document.getElementById('login-error');
-
-        try {
-            
-            const userCredential = await auth.signInWithEmailAndPassword(email, pass);
-            const userDoc = await db.collection('users').doc(userCredential.user.uid).get();
-            
-            if (userDoc.exists) {
-                const role = userDoc.data().role;
-                if (role === 'admin') window.location.href = 'admin.html';
-                else if (role === 'profesor') window.location.href = 'profesor.html';
-                else window.location.href = 'alumno.html';
-            } else {
-                errorEl.textContent = "Usuario sin rol asignado en la base de datos.";
-                errorEl.classList.remove('hidden');
-            }
-        } catch (error) {
-            errorEl.textContent = "Error al iniciar sesión: " + error.message;
-            errorEl.classList.remove('hidden');
-        }
-    });
-}
-
 // Logout Logic
 const logoutBtn = document.getElementById('logout-btn');
 if (logoutBtn) {
