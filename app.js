@@ -331,7 +331,7 @@ async function cargarSimuladoresAlumno() {
     });
 }
 
-// Interfaz para resolver el examen interactivo
+// Interfaz para resolver el examen interactivo (Muestra todas las preguntas de la materia)
 function iniciarSimulador(id, materia) {
     const mainArea = document.querySelector('main');
     const preguntasMateria = bancoPreguntasCeneval[materia] || bancoPreguntasCeneval["general"];
@@ -353,19 +353,18 @@ function iniciarSimulador(id, materia) {
     });
 
     mainArea.innerHTML = `
-        <div class="max-w-2xl mx-auto space-y-6">
-            <div class="flex justify-between items-center bg-indigo-900 text-white p-4 rounded-xl">
+        <div class="max-w-2xl mx-auto space-y-6 pb-12">
+            <div class="flex justify-between items-center bg-indigo-900 text-white p-4 rounded-xl shadow">
                 <h3 class="font-bold text-lg">Simulador CENEVAL: ${materia}</h3>
-                <button onclick="location.reload()" class="bg-pink-600 px-3 py-1 rounded text-xs font-bold">Salir del Simulador</button>
+                <button onclick="location.reload()" class="bg-pink-600 hover:bg-pink-700 px-3 py-1 rounded text-xs font-bold transition">Salir del Simulador</button>
             </div>
             <form id="form-resolver-simulador" onsubmit="evaluarSimulador(event, '${materia}')">
                 ${htmlPreguntas}
-                <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg mt-4">Calcalcular Calificación y Ver Retroalimentación</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg mt-6 transition">Calcular Calificación y Ver Retroalimentación</button>
             </form>
         </div>
     `;
 }
-
 // Evaluar respuestas y mostrar retroalimentación
 function evaluarSimulador(e, materia) {
     e.preventDefault();
