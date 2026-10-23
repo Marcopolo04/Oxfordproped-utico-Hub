@@ -14,7 +14,7 @@ if (!firebase.apps.length) {
 }
 const auth = firebase.auth();
 const db = firebase.firestore();
-// Banco de reactivos oficiales estilo CENEVAL
+
 const bancoPreguntasCeneval = {
     "Biología EXANI-I": [
         {
@@ -22,12 +22,6 @@ const bancoPreguntasCeneval = {
             opciones: ["A) El tejido", "B) La célula", "C) El ADN", "D) El órgano"],
             correcta: 1,
             retro: "La célula es la unidad de origen, estructura y función de todos los seres vivos."
-        },
-        {
-            pregunta: "¿Qué organelo celular se encarga de la respiración celular y la producción de energía (ATP)?",
-            opciones: ["A) Ribosoma", "B) Cloroplasto", "C) Mitocondria", "D) Aparato de Golgi"],
-            correcta: 2,
-            retro: "Las mitocondrias son los centros energéticos de la célula donde se produce el ATP."
         }
     ],
     "Física EXANI-I": [
@@ -36,32 +30,9 @@ const bancoPreguntasCeneval = {
             opciones: ["A) Su masa sea cero", "B) Se aplique una fuerza externa neta sobre él", "C) Su velocidad disminuya por la gravedad", "D) Su energía cinética aumente"],
             correcta: 1,
             retro: "La inercia establece que un objeto requiere de una fuerza externa neta para cambiar su estado de movimiento."
-        },
-        {
-            pregunta: "¿Cuál es la unidad de medida de la fuerza en el Sistema Internacional (SI)?",
-            opciones: ["A) Joule", "B) Watt", "C) Newton", "D) Pascal"],
-            correcta: 2,
-            retro: "El Newton (N) es la unidad de fuerza derivada en el SI."
-        }
-    ],
-    "Química EXANI-I": [
-        {
-            pregunta: "¿Cómo se le llama a la columna vertical en la tabla periódica de los elementos?",
-            opciones: ["A) Periodo", "B) Grupo o Familia", "C) Órbita", "D) Bloque"],
-            correcta: 1,
-            retro: "Los grupos o familias corresponden a las columnas verticales y comparten propiedades químicas similares."
-        }
-    ],
-    "general": [
-        {
-            pregunta: "Pregunta clave de práctica estándar estilo CENEVAL para este módulo de estudio:",
-            opciones: ["A) Opción de análisis lógico A", "B) Opción de resolución teórica B", "C) Opción de aplicación práctica C", "D) Opción de conclusión D"],
-            correcta: 2,
-            retro: "En el examen CENEVAL se evalúa la aplicación del conocimiento a situaciones analíticas."
         }
     ]
 };
-
 // Login Logic
 const loginForm = document.getElementById('login-form');
 if (loginForm) {
