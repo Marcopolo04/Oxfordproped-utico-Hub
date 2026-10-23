@@ -131,12 +131,43 @@ if (createSimForm) {
             });
             alert("¡Simulador tipo Ceneval creado y asignado con éxito!");
             createSimForm.reset();
+            cargarSimuladoresProfesor(); // <--- Esta línea actualiza la lista al instante
         } catch (err) {
             alert("Error al crear simulador: " + err.message);
         }
     });
 }
 
+// Función para mostrar los simuladores en el panel del profesor
+async function cargarSimuladoresProfesor() {
+    const contenedor = document.getElementById('lista-simuladores-profesor');
+    if (!contenedor) return;
+    contenedor.innerHTML = '';
+
+    const snap = await db.collection('simuladores').get();
+    if (snap.empty) {
+        contenedor.innerHTML = `<p class="text-sm text-gray-500 italic">No hay simuladores creados todavía.</p>`;
+        return;
+    }
+
+    snap.forEach(doc => {
+        const data = doc.data();
+        contenedor.innerHTML += `
+            <div class="p-3 bg-gray-50 border rounded-lg flex justify-between items-center">
+                <div>
+                    <h4 class="font-bold text-sm text-gray-800">${data.materia}</h4>
+                    <p class="text-xs text-gray-500">Dificultad: ${data.dificultad} | Preguntas: ${data.numPreguntas}</p>
+                </div>
+                <span class="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded font-bold">Activo</span>
+            </div>
+        `;
+    });
+}
+
+// Ejecutar al cargar la página del profesor si existe la lista
+if (document.getElementById('lista-simuladores-profesor')) {
+    cargarSimuladoresProfesor();
+}
 // Alumno: Cambiar Vistas
 function cambiarVistaAlumno(vista) {
     document.getElementById('vista-temarios').classList.add('hidden');
