@@ -265,40 +265,6 @@ async function cargarSimuladoresAlumno() {
 function verLeccion(materia) {
     alert(`Abriendo el contenido teórico desarrollado y lecciones interactivas para: ${materia}. ¡Próximamente con recursos multimedia tipo Khan Academy!`);
 }
-// Base de datos de reactivos simulados estilo CENEVAL según la materia
-const bancoPreguntasCeneval = {
-    "Biología (EXANI-I)": [
-        {
-            pregunta: "¿Cuál es la unidad estructural y funcional básica de todos los organismos vivos?",
-            opciones: ["A) El tejido", "B) La célula", "C) El ADN", "D) El órgano"],
-            correcta: 1, // Opción B
-            retro: "La célula es la unidad de origen, estructura y función de todos los seres vivos."
-        },
-        {
-            pregunta: "¿Qué organelo celular se encarga de la respiración celular y la producción de energía (ATP)?",
-            opciones: ["A) Ribosoma", "B) Cloroplasto", "C) Mitocondria", "D) Aparato de Golgi"],
-            correcta: 2, // Opción C
-            retro: "Las mitocondrias son los centros energéticos de la célula donde se produce el ATP mediante la respiración aerobia."
-        }
-    ],
-    "Física (EXANI-I)": [
-        {
-            pregunta: "De acuerdo con la primera ley de Newton (Ley de la inercia), un cuerpo permanece en estado de reposo o movimiento rectilíneo uniforme a menos que...",
-            opciones: ["A) Su masa sea igual a cero", "B) Se aplique una fuerza externa neta sobre él", "C) Su velocidad disminuya por la gravedad", "D) Su energía cinética aumente"],
-            correcta: 1, // Opción B
-            retro: "La inercia establece que un objeto no cambia su estado de movimiento por sí mismo; requiere de una fuerza externa neta."
-        }
-    ],
-    // Módulo genérico por defecto para cualquier otra materia seleccionada
-    "general": [
-        {
-            pregunta: "Pregunta clave de práctica estándar estilo CENEVAL para este módulo de estudio:",
-            opciones: ["A) Opción de análisis lógico A", "B) Opción de resolución teórica B", "C) Opción de aplicación práctica C", "D) Opción de conclusión D"],
-            correcta: 2, // Opción C
-            retro: "En el examen CENEVAL se evalúa la aplicación del conocimiento a situaciones prácticas y analíticas."
-        }
-    ]
-};
 
 // Alumno: Cargar y resolver simuladores interactivos
 async function cargarSimuladoresAlumno() {
