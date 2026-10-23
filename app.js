@@ -268,6 +268,9 @@ async function cargarSimuladoresAlumno() {
     snap.forEach(doc => {
         const data = doc.data();
         const simId = doc.id;
+        // Limpiamos el texto de la materia para evitar errores con comillas en JavaScript
+        const materiaLimpia = data.materia.replace(/'/g, "");
+        
         contenedor.innerHTML += `
             <div class="bg-white p-5 rounded-xl shadow border border-gray-100 flex flex-col justify-between">
                 <div>
@@ -275,12 +278,81 @@ async function cargarSimuladoresAlumno() {
                     <h4 class="font-bold text-lg text-gray-800 mt-2">${data.materia}</h4>
                     <p class="text-xs text-gray-500 mt-1">Preguntas: ${data.numPreguntas} reactivos estilo Ceneval</p>
                 </div>
-                <button onclick="iniciarSimulador('${simId}', '${data.materia}')" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition">Resolver Simulador</button>
+                <button onclick="iniciarSimulador('${simId}', '${materiaLimpia}')" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition">Resolver Simulador</button>
             </div>
         `;
     });
 }
 
+// Interfaz para resolver el examen interactivo
+function iniciarSimulador(id, materia) {
+    const mainArea = document.querySelector('main');
+    const preguntasMateria = bancoPreguntasCeneval[materia] || bancoPreguntasCeneval["general"];
+    
+    let htmlPreguntas = '';
+    preguntasMateria.forEach((item, index) => {
+        htmlPreguntas += `
+            <div class="bg-white p-6 rounded-xl shadow mb-4 border border-gray-100">
+                <p class="font-bold text-gray-800 mb-3">${index + 1}. ${item.pregunta}</p>
+                <div class="space-y-2">
+                    ${item.opciones.map((opt, i) => `
+                        <label class="block p-3 rounded-lg border hover:bg-indigo-50 cursor-pointer">
+                            <input type="radio" name="p_${index}" value="${i}" class="mr-2"> ${opt}
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+
+    mainArea.innerHTML = `
+        <div class="max-w-2xl mx-auto space-y-6">
+            <div class="flex justify-between items-center bg-indigo-900 text-white p-4 rounded-xl">
+                <h3 class="font-bold text-lg">Simulador CENEVAL: ${materia}</h3>
+                <button onclick="location.reload()" class="bg-pink-600 px-3 py-1 rounded text-xs font-bold">Salir del Simulador</button>
+            </div>
+            <form id="form-resolver-simulador" onsubmit="evaluarSimulador(event, '${materia}')">
+                ${htmlPreguntas}
+                <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg mt-4">Calcalcular Calificación y Ver Retroalimentación</button>
+            </form>
+        </div>
+    `;
+}
+
+// Evaluar respuestas y mostrar retroalimentación
+function evaluarSimulador(e, materia) {
+    e.preventDefault();
+    const preguntasMateria = bancoPreguntasCeneval[materia] || bancoPreguntasCeneval["general"];
+    let aciertos = 0;
+    
+    preguntasMateria.forEach((item, index) => {
+        const seleccionada = document.querySelector(`input[name="p_${index}"]:checked`);
+        if (seleccionada && parseInt(seleccionada.value) === item.correcta) {
+            aciertos++;
+        }
+    });
+
+    const calificacion = ((aciertos / preguntasMateria.length) * 100).toFixed(0);
+    const mainArea = document.querySelector('main');
+
+    let retroMensaje = calificacion >= 80 ? "¡Excelente desempeño! Estás muy cerca del nivel requerido por CENEVAL." : "Te recomendamos repasar los conceptos teóricos y realizar más ejercicios en este módulo.";
+
+    mainArea.innerHTML = `
+        <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl text-center space-y-6">
+            <span class="text-5xl">📊</span>
+            <h3 class="text-3xl font-black text-gray-800">Resultado del Simulador</h3>
+            <div class="bg-indigo-50 p-6 rounded-xl">
+                <span class="text-4xl font-extrabold text-indigo-600">${calificacion}% de aciertos</span>
+                <p class="text-sm text-gray-600 mt-2">${aciertos} de ${preguntasMateria.length} reactivos correctos.</p>
+            </div>
+            <div class="bg-pink-50 p-4 rounded-xl text-left border border-pink-100">
+                <h4 class="font-bold text-pink-700 text-sm mb-1">Retroalimentación con Inteligencia Artificial:</h4>
+                <p class="text-xs text-gray-700">${retroMensaje}</p>
+            </div>
+            <button onclick="location.reload()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl shadow">Volver al Panel Principal</button>
+        </div>
+    `;
+}
 // Interfaz para resolver el examen interactivo
 function iniciarSimulador(id, materia) {
     const mainArea = document.querySelector('main');
