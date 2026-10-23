@@ -218,3 +218,136 @@ async function cargarSimuladoresAlumno() {
 function verLeccion(materia) {
     alert(`Abriendo el contenido teórico desarrollado y lecciones interactivas para: ${materia}. ¡Próximamente con recursos multimedia tipo Khan Academy!`);
 }
+// Base de datos de reactivos simulados estilo CENEVAL según la materia
+const bancoPreguntasCeneval = {
+    "Biología (EXANI-I)": [
+        {
+            pregunta: "¿Cuál es la unidad estructural y funcional básica de todos los organismos vivos?",
+            opciones: ["A) El tejido", "B) La célula", "C) El ADN", "D) El órgano"],
+            correcta: 1, // Opción B
+            retro: "La célula es la unidad de origen, estructura y función de todos los seres vivos."
+        },
+        {
+            pregunta: "¿Qué organelo celular se encarga de la respiración celular y la producción de energía (ATP)?",
+            opciones: ["A) Ribosoma", "B) Cloroplasto", "C) Mitocondria", "D) Aparato de Golgi"],
+            correcta: 2, // Opción C
+            retro: "Las mitocondrias son los centros energéticos de la célula donde se produce el ATP mediante la respiración aerobia."
+        }
+    ],
+    "Física (EXANI-I)": [
+        {
+            pregunta: "De acuerdo con la primera ley de Newton (Ley de la inercia), un cuerpo permanece en estado de reposo o movimiento rectilíneo uniforme a menos que...",
+            opciones: ["A) Su masa sea igual a cero", "B) Se aplique una fuerza externa neta sobre él", "C) Su velocidad disminuya por la gravedad", "D) Su energía cinética aumente"],
+            correcta: 1, // Opción B
+            retro: "La inercia establece que un objeto no cambia su estado de movimiento por sí mismo; requiere de una fuerza externa neta."
+        }
+    ],
+    // Módulo genérico por defecto para cualquier otra materia seleccionada
+    "general": [
+        {
+            pregunta: "Pregunta clave de práctica estándar estilo CENEVAL para este módulo de estudio:",
+            opciones: ["A) Opción de análisis lógico A", "B) Opción de resolución teórica B", "C) Opción de aplicación práctica C", "D) Opción de conclusión D"],
+            correcta: 2, // Opción C
+            retro: "En el examen CENEVAL se evalúa la aplicación del conocimiento a situaciones prácticas y analíticas."
+        }
+    ]
+};
+
+// Alumno: Cargar y resolver simuladores interactivos
+async function cargarSimuladoresAlumno() {
+    const contenedor = document.getElementById('lista-simuladores-alumno');
+    if (!contenedor) return;
+    contenedor.innerHTML = '';
+
+    const snap = await db.collection('simuladores').get();
+    if (snap.empty) {
+        contenedor.innerHTML = `<p class="text-sm text-gray-500 italic">No hay simuladores asignados en este momento.</p>`;
+        return;
+    }
+
+    snap.forEach(doc => {
+        const data = doc.data();
+        const simId = doc.id;
+        contenedor.innerHTML += `
+            <div class="bg-white p-5 rounded-xl shadow border border-gray-100 flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-bold bg-pink-100 text-pink-700 px-2 py-1 rounded">${data.dificultad}</span>
+                    <h4 class="font-bold text-lg text-gray-800 mt-2">${data.materia}</h4>
+                    <p class="text-xs text-gray-500 mt-1">Preguntas: ${data.numPreguntas} reactivos estilo Ceneval</p>
+                </div>
+                <button onclick="iniciarSimulador('${simId}', '${data.materia}')" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition">Resolver Simulador</button>
+            </div>
+        `;
+    });
+}
+
+// Interfaz para resolver el examen interactivo
+function iniciarSimulador(id, materia) {
+    const mainArea = document.querySelector('main');
+    const preguntasMateria = bancoPreguntasCeneval[materia] || bancoPreguntasCeneval["general"];
+    
+    let htmlPreguntas = '';
+    preguntasMateria.forEach((item, index) => {
+        htmlPreguntas += `
+            <div class="bg-white p-6 rounded-xl shadow mb-4 border border-gray-100">
+                <p class="font-bold text-gray-800 mb-3">${index + 1}. ${item.pregunta}</p>
+                <div class="space-y-2">
+                    ${item.opciones.map((opt, i) => `
+                        <label class="block p-3 rounded-lg border hover:bg-indigo-50 cursor-pointer">
+                            <input type="radio" name="p_${index}" value="${i}" class="mr-2"> ${opt}
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+
+    mainArea.innerHTML = `
+        <div class="max-w-2xl mx-auto space-y-6">
+            <div class="flex justify-between items-center bg-indigo-900 text-white p-4 rounded-xl">
+                <h3 class="font-bold text-lg">Simulador CENEVAL: ${materia}</h3>
+                <button onclick="location.reload()" class="bg-pink-600 px-3 py-1 rounded text-xs font-bold">Salir del Simulador</button>
+            </div>
+            <form id="form-resolver-simulador" onsubmit="evaluarSimulador(event, '${materia}')">
+                ${htmlPreguntas}
+                <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg mt-4">Calcular Calificación y Ver Retroalimentación</button>
+            </form>
+        </div>
+    `;
+}
+
+// Evaluar respuestas y mostrar retroalimentación con IA pedagógica
+function evaluarSimulador(e, materia) {
+    e.preventDefault();
+    const preguntasMateria = bancoPreguntasCeneval[materia] || bancoPreguntasCeneval["general"];
+    let aciertos = 0;
+    
+    preguntasMateria.forEach((item, index) => {
+        const seleccionada = document.querySelector(`input[name="p_${index}"]:checked`);
+        if (seleccionada && parseInt(seleccionada.value) === item.correcta) {
+            aciertos++;
+        }
+    });
+
+    const calificacion = ((aciertos / preguntasMateria.length) * 100).toFixed(0);
+    const mainArea = document.querySelector('main');
+
+    let retroMensaje = calificacion >= 80 ? "¡Excelente desempeño! Estás muy cerca del nivel requerido por CENEVAL." : "Te recomendamos repasar los conceptos teóricos y realizar más ejercicios en este módulo.";
+
+    mainArea.innerHTML = `
+        <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl text-center space-y-6">
+            <span class="text-5xl">📊</span>
+            <h3 class="text-3xl font-black text-gray-800">Resultado del Simulador</h3>
+            <div class="bg-indigo-50 p-6 rounded-xl">
+                <span class="text-4xl font-extrabold text-indigo-600">${calificacion}% de aciertos</span>
+                <p class="text-sm text-gray-600 mt-2">${aciertos} de ${preguntasMateria.length} reactivos correctos.</p>
+            </div>
+            <div class="bg-pink-50 p-4 rounded-xl text-left border border-pink-100">
+                <h4 class="font-bold text-pink-700 text-sm mb-1">Retroalimentación con Inteligencia Artificial:</h4>
+                <p class="text-xs text-gray-700">${retroMensaje}</p>
+            </div>
+            <button onclick="location.reload()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl shadow">Volver al Panel Principal</button>
+        </div>
+    `;
+}
+
