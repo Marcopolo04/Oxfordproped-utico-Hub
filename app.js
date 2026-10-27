@@ -420,4 +420,38 @@ function evaluarSimulador(e, materia) {
         </div>
     `;
 }
+// Manejador del Formulario de Inicio de Sesión
+const loginForm = document.getElementById('login-form'); // O el ID que tenga tu formulario en index.html
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
+        try {
+            // 1. Autenticar con Firebase Auth
+            const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+
+            // 2. Consultar el rol del usuario en la colección 'users' de Firestore
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            
+            if (userDoc.exists) {
+                const rol = userDoc.data().rol;
+                
+                // 3. Redirigir según el rol correspondiente
+                if (rol === 'admin') {
+                    window.location.href = 'admin.html';
+                } else if (rol === 'profesor') {
+                    window.location.href = 'profesor.html';
+                } else {
+                    window.location.href = 'alumno.html';
+                }
+            } else {
+                alert("No se encontró el rol asignado para este usuario en la base de datos.");
+            }
+        } catch (error) {
+            alert("Error al iniciar sesión: " + error.message);
+        }
+    });
+}
