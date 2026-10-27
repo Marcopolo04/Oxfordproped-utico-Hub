@@ -420,13 +420,23 @@ function evaluarSimulador(e, materia) {
         </div>
     `;
 }
-// Manejador del Formulario de Inicio de Sesión
-const loginForm = document.getElementById('login-form'); // O el ID que tenga tu formulario en index.html
+// Manejador seguro del Formulario de Inicio de Sesión
+const loginForm = document.getElementById('login-form');
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        
+        // Buscamos los campos de forma flexible (por ID o por tipo de input)
+        const emailInput = document.getElementById('email') || loginForm.querySelector('input[type="email"]');
+        const passwordInput = document.getElementById('password') || loginForm.querySelector('input[type="password"]');
+
+        if (!emailInput || !passwordInput) {
+            alert("No se encontraron los campos de correo o contraseña en el formulario.");
+            return;
+        }
+
+        const email = emailInput.value;
+        const password = passwordInput.value;
 
         try {
             // 1. Autenticar con Firebase Auth
@@ -455,3 +465,4 @@ if (loginForm) {
         }
     });
 }
+
