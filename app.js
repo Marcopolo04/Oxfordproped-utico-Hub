@@ -420,49 +420,69 @@ function evaluarSimulador(e, materia) {
         </div>
     `;
 }
-// Manejador seguro del Formulario de Inicio de Sesión
-const loginForm = document.getElementById('login-form');
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+// Manejador universal y directo para el inicio de sesión
+document.addEventListener('DOMContentLoaded', () => {
+    const btnIngresar = document.querySelector('button[type="submit"]') || document.querySelector('form button');
+    
+    if (btnIngresar) {
+        const form = btnIngresar.closest('form');
         
-        // Buscamos los campos de forma flexible (por ID o por tipo de input)
-        const emailInput = document.getElementById('email') || loginForm.querySelector('input[type="email"]');
-        const passwordInput = document.getElementById('password') || loginForm.querySelector('input[type="password"]');
-
-        if (!emailInput || !passwordInput) {
-            alert("No se encontraron los campos de correo o contraseña en el formulario.");
-            return;
-        }
-
-        const email = emailInput.value;
-        const password = passwordInput.value;
-
-        try {
-            // 1. Autenticar con Firebase Auth
-            const userCredential = await auth.signInWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-
-            // 2. Consultar el rol del usuario en la colección 'users' de Firestore
-            const userDoc = await db.collection('users').doc(user.uid).get();
+        const procesarLogin = async (e) => {
+            if (e) e.preventDefault();
             
-            if (userDoc.exists) {
-                const rol = userDoc.data().rol;
-                
-                // 3. Redirigir según el rol correspondiente
-                if (rol === 'admin') {
-                    window.location.href = 'admin.html';
-                } else if (rol === 'profesor') {
-                    window.location.href = 'profesor.html';
-                } else {
-                    window.location.href = 'alumno.html';
-                }
-            } else {
-                alert("No se encontró el rol asignado para este usuario en la base de datos.");
+            // Buscamos los inputs de correo y contraseña en la página
+            const emailInput = document.querySelector('input[type="email"]') || document.querySelectorAll('input')[0];
+            const passwordInput = document.querySelector('input[type="password"]') || document.querySelectorAll('input')[1];
+
+            if (!emailInput || !passwordInput) {
+                alert("Por favor verifica los campos de correo y contraseña.");
+                return;
             }
-        } catch (error) {
-            alert("Error al iniciar sesión: " + error.message);
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email || !password) {
+                alert("Por favor escribe tu correo y contraseña.");
+                return;
+            }
+
+            try {
+                // 1. Autenticar con Firebase Auth
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // 2. Consultar el rol del usuario en la colección 'users' de Firestore
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (userDoc.exists) {
+                    const rol = userDoc.data().rol;
+                    
+                    // 3. Redirigir según el rol correspondiente
+                    if (rol === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else if (rol === 'profesor') {
+                        window.location.href = 'profesor.html';
+                    } else {
+                        window.location.href = 'alumno.html';
+                    }
+                } else {
+                    alert("No se encontró el rol asignado para este usuario en la base de datos de Firebase.");
+                }
+            } catch (error) {
+                alert("Error al iniciar sesión: " + error.message);
+            }
+        };
+
+        if (form) {
+            form.addEventListener('submit', procesarLogin);
+        } else {
+            btnIngresar.addEventListener('click', procesarLogin);
         }
-    });
-}
+    }
+});
+
+
+
+
 
